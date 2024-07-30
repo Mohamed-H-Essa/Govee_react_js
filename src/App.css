@@ -48,3 +48,49 @@ body, #root {
     transform: rotate(360deg);
   }
 }
+
+
+.custom-date-picker {
+  background-color: #555; /* Background color */
+  color: white; /* Text color */
+  border: 1px solid #777; /* Optional: border color */
+  padding: 5px; /* Optional: padding */
+}
+
+.custom-date-picker::placeholder {
+  color: white; /* Placeholder text color */
+}
+
+.device-details-container {
+  background-color: #333;
+  padding: 20px;
+  border-radius: 8px;
+  color: white;
+  max-width: 600px;
+  margin: auto;
+}
+
+.device-details-container h2 {
+  text-align: center;
+  margin-bottom: 20px;
+  font-size: 24px;
+}
+
+.device-detail {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 0;
+  border-bottom: 1px solid #444;
+}
+
+.device-detail:last-child {
+  border-bottom: none;
+}
+
+.device-detail-label {
+  font-weight: bold;
+}
+
+.device-detail-value {
+  text-align: right;
+}
