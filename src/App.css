@@ -2,7 +2,8 @@
   text-align: center;
 }
 
-body, #root {
+body,
+#root {
   margin: 0;
   padding: 0;
   min-height: 100vh;
@@ -12,7 +13,6 @@ body, #root {
 * {
   color: #fff;
 }
-
 
 .App-logo {
   height: 40vmin;
@@ -48,7 +48,6 @@ body, #root {
     transform: rotate(360deg);
   }
 }
-
 
 .custom-date-picker {
   background-color: #555; /* Background color */
@@ -93,4 +92,46 @@ body, #root {
 
 .device-detail-value {
   text-align: right;
+}
+
+button {
+  padding: 10px;
+  background-color: #444;
+  color: white;
+  border: none;
+}
+
+button:disabled {
+  background-color: #888;
+  color: #ccc;
+  cursor: not-allowed;
+}
+
+button:hover:enabled {
+  background-color: #555;
+}
+
+.loading-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 70vh; /* Adjust this as necessary for your layout */
+}
+
+.loading-container .react-loading {
+  width: 50px; /* Adjust the width and height to make it smaller */
+  height: 50px;
+}
+/* Ensure the DatePicker container has a custom class */
+.custom-date-picker {
+  background-color: #555; /* Background color of the DatePicker */
+  color: white; /* Text color */
+}
+
+.react-datepicker__year-select,
+.react-datepicker__year-select > option,
+.react-datepicker__month-select,
+.react-datepicker__month-select > option {
+  color: black;
+  background-color: #c1c1ff;
 }

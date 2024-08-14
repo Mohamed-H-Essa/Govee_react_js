@@ -6,6 +6,7 @@ import { useEffect } from "react";
 import { API_URL } from "./constants";
 import { Typography } from "@mui/material";
 import Loading from "./Loading";
+import { useNavigate } from "react-router-dom";
 
 const MainPage = () => {
   const [selectedDevice, setSelectedDevice] = useState(null);
@@ -15,6 +16,7 @@ const MainPage = () => {
   const [readings, setReadings] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const navigate = useNavigate();
 
   useEffect(() => {
     setError("");
@@ -40,6 +42,7 @@ const MainPage = () => {
         const data = await value.json();
 
         setDevices(data);
+        localStorage.setItem("devices", JSON.stringify(data));
         setLoading(false);
         return;
       })
@@ -55,26 +58,144 @@ const MainPage = () => {
     setSelectedDevice(selectedOption);
   };
 
-  const handleExportReport = () => {
-    // Implement export readings report logic
-    alert("Export readings report");
+  const handleExportReport = async () => {
+    setError("");
+    setLoading(true);
+    try {
+      let queryString = "?";
+      if (startDate) {
+        queryString += "startDate=" + startDate.toISOString() + "&";
+      }
+      if (endDate) {
+        queryString += "endDate=" + endDate.toISOString();
+      }
+      await downloadFileWithGet(
+        `${API_URL}/reports/` + selectedDevice.value + queryString,
+
+        selectedDevice.label + "_" + selectedDevice.value,
+
+        localStorage.getItem("token")
+      );
+
+      setLoading(false);
+    } catch (e) {
+      setError(`Error: ${e}`);
+      setLoading(false);
+      return;
+    }
   };
 
-  const handleExportXLSX = () => {
-    // Implement export readings to XLSX logic
-    alert("Export readings to XLSX");
+  const handleExportXLSX = async () => {
+    setError("");
+    setLoading(true);
+    try {
+      let body = {};
+      if (startDate) {
+        body.startDate = startDate.toISOString();
+      }
+      if (endDate) {
+        body.endDate = endDate.toISOString();
+      }
+      console.log("local:");
+      console.log(body.startDate.toLocaleString());
+      console.log(body);
+      await downloadFileWithPost(
+        `${API_URL}/excel/${selectedDevice.value}`,
+        selectedDevice.label + "_" + selectedDevice.value,
+        body
+      );
+    } catch (e) {
+      setError(` An error has occured while exporting the readings: ${e}`);
+    }
+    setLoading(false);
+    return;
   };
 
   const handleShowReadings = () => {
-    // Implement show readings logic
-    alert("Show readings");
+    try {
+      const d = startDate.toISOString();
+      console.log(d);
+      console.log(startDate);
+      console.log(endDate);
+    } catch (e) {
+      setError("Please select a date");
+    }
   };
 
   const handleShowDeviceDetails = () => {
-    // Implement show device details logic
-    alert("Show device details");
+    console.log(selectedDevice);
+    navigate(`/devices/${selectedDevice.value}`);
   };
-  // return ( <Navigate to={'/login'} replace /> );
+  async function downloadFileWithGet(url, fileName, token) {
+    try {
+      // Make the request using fetch
+      const response = await fetch(url, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (!response.ok) {
+        console.error(
+          `An error has occurred while downloading the file: ${response.statusText}`
+        );
+        return;
+      }
+
+      const blob = await response.blob();
+      const blobUrl = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = blobUrl;
+      a.download = `readings_for_${fileName}.pdf`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(blobUrl);
+    } catch (error) {
+      console.error("Download error:", error);
+    }
+  }
+
+  async function downloadFileWithPost(url, fileName, body) {
+    try {
+      // Make the request using fetch
+      const response = await fetch(url, {
+        method: "POST", // Use POST if you need to include a body
+        headers: {
+          "Content-Type": "application/json", // Adjust content type as needed
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+        body: JSON.stringify(body),
+      });
+
+      if (!response.ok) {
+        setError(
+          `An error has occured while exporting the readings: ${response.statusText}`
+        );
+        return;
+      }
+
+      // Get the blob from the response
+      const blob = await response.blob();
+
+      // Create a URL for the blob
+      const blobUrl = URL.createObjectURL(blob);
+
+      // Create an <a> element and trigger a download
+      const a = document.createElement("a");
+      a.href = blobUrl;
+      a.download = `readings_for_${fileName}.xlsx`; // Set the desired file name
+      document.body.appendChild(a);
+      a.click();
+
+      // Clean up
+      document.body.removeChild(a);
+      URL.revokeObjectURL(blobUrl);
+    } catch (error) {
+      console.error("Download error:", error);
+    }
+  }
 
   return (
     <div
@@ -86,7 +207,7 @@ const MainPage = () => {
       }}
     >
       {loading ? (
-        <Loading />
+        <Loading type="spinningBubbles" />
       ) : error !== "" ? (
         <Typography color="error">{error}</Typography>
       ) : (
@@ -128,6 +249,9 @@ const MainPage = () => {
                 onChange={(date) => setStartDate(date)}
                 selectsStart
                 placeholderText="Start Date"
+                showYearDropdown
+                showMonthDropdown
+                dropdownMode="select"
                 dateFormat="MMMM d, yyyy"
               />
               <DatePicker
@@ -135,6 +259,9 @@ const MainPage = () => {
                 selected={endDate}
                 onChange={(date) => setEndDate(date)}
                 selectsEnd
+                showYearDropdown
+                showMonthDropdown
+                dropdownMode="select"
                 placeholderText="End Date"
                 dateFormat="MMMM d, yyyy"
               />
@@ -143,45 +270,19 @@ const MainPage = () => {
           <div style={{ marginTop: "20px", display: "flex", gap: "10px" }}>
             <button
               onClick={handleShowDeviceDetails}
-              style={{
-                padding: "10px",
-                backgroundColor: "#444",
-                color: "white",
-                border: "none",
-              }}
+              disabled={!selectedDevice}
             >
               Show Device Details
             </button>
-            <button
-              onClick={handleExportReport}
-              style={{
-                padding: "10px",
-                backgroundColor: "#444",
-                color: "white",
-                border: "none",
-              }}
-            >
+            <button onClick={handleExportReport} disabled={!selectedDevice}>
               Export Readings Report
             </button>
-            <button
-              onClick={handleExportXLSX}
-              style={{
-                padding: "10px",
-                backgroundColor: "#444",
-                color: "white",
-                border: "none",
-              }}
-            >
+            <button onClick={handleExportXLSX} disabled={!selectedDevice}>
               Export Readings XLSX
             </button>
             <button
               onClick={handleShowReadings}
-              style={{
-                padding: "10px",
-                backgroundColor: "#444",
-                color: "white",
-                border: "none",
-              }}
+              disabled={!selectedDevice || !startDate || !endDate}
             >
               Show Readings
             </button>

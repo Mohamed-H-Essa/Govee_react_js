@@ -9,6 +9,7 @@ import EditingDevicePage from "./EditingDevicePage";
 import EditingUserPage from "./EditingUserPage";
 import MainPage from "./Main";
 import ProtectedRoute from "./ProtectedRoute";
+import DeviceDetailsPage from "./DeviceDetailPage";
 
 const App = () => {
   return (
@@ -19,6 +20,7 @@ const App = () => {
           <Route exact path="/" element={<ProtectedRoute element={<MainPage />} />} />
           <Route exact path="/manage_users" element={<ProtectedRoute  element={<EditingUserPage />} />} />
           <Route exact path="/login" element={<LoginPage />} />
+          <Route path='devices/:id' element={<ProtectedRoute element={<DeviceDetailsPage />} />} />
         </Routes>
       </div>
     </BrowserRouter>

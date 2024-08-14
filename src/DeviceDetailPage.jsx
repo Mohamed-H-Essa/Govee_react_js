@@ -1,8 +1,12 @@
 import React from "react";
 import PropTypes from "prop-types";
-import './DeviceDetails.css'; // Make sure to import your CSS file
+import './App.css'; // Make sure to import your CSS file
+import { useParams } from "react-router-dom";
 
-const DeviceDetails = ({ device }) => {
+const DeviceDetailsPage = () => {
+  const {id} =  useParams();
+  const device = JSON.parse(localStorage.getItem("devices")).find((device) => device.id === parseInt(id));
+
   return (
     <div className="device-details-container">
       <h2>Device Details</h2>
@@ -82,7 +86,7 @@ const DeviceDetails = ({ device }) => {
   );
 };
 
-DeviceDetails.propTypes = {
+DeviceDetailsPage.propTypes = {
   device: PropTypes.shape({
     id: PropTypes.number.isRequired,
     deviceModel: PropTypes.string.isRequired,
@@ -109,4 +113,4 @@ DeviceDetails.propTypes = {
   }).isRequired,
 };
 
-export default DeviceDetails;
+export default DeviceDetailsPage;
