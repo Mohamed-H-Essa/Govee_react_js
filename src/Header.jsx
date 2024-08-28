@@ -1,6 +1,5 @@
 import React from "react";
-import { AppBar, Toolbar, Typography, IconButton } from "@mui/material";
-import MedicalServicesIcon from "@mui/icons-material/MedicalServices";
+import { AppBar, Toolbar, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { Button } from "@mui/material";
 import { useNavigate } from "react-router-dom";
@@ -21,9 +20,9 @@ const Header = () => {
   return (
     <GradientAppBar position="static">
       <Toolbar>
-        <IconButton edge="start" color="inherit" aria-label="device">
+        {/* <IconButton edge="start" color="inherit" aria-label="device">
           <MedicalServicesIcon />
-        </IconButton>
+        </IconButton> */}
         <Button style={{ color: "red" }} onClick={handleSignOut}>
           Sign Out
         </Button>

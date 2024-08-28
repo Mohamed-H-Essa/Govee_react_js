@@ -197,6 +197,10 @@ const MainPage = () => {
     }
   }
 
+  function handleToAdminPage() {
+    navigate("/admin");
+  }
+
   return (
     <div
       style={{
@@ -281,12 +285,16 @@ const MainPage = () => {
               Export Readings XLSX
             </button>
             <button
-              onClick={handleShowReadings}
-              disabled={!selectedDevice || !startDate || !endDate}
+            // onClick={handleShowReadings}
+            // disabled={!selectedDevice || !startDate || !endDate}
             >
-              Show Readings
+              Open Alerts
             </button>
-          </div>{" "}
+          </div>
+
+          <div className="admin-page-button">
+            <button onClick={handleToAdminPage}>Admin Page</button>
+          </div>
         </>
       )}
     </div>

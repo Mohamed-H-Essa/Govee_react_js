@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
-import { Container, Typography, Box, TextField, Button } from '@mui/material';
+import React, { useState } from "react";
+import { Container, Typography, Box, TextField, Button } from "@mui/material";
 
-const EditReadingsPage = () => {
-  const [readingId, setReadingId] = useState('');
-  const [readingValue, setReadingValue] = useState('');
+const ManageReadingsPage = () => {
+  const [readingId, setReadingId] = useState("");
+  const [readingValue, setReadingValue] = useState("");
 
   const handleReadingIdChange = (event) => {
     setReadingId(event.target.value);
@@ -16,8 +16,8 @@ const EditReadingsPage = () => {
   const handleSubmit = (event) => {
     event.preventDefault();
     // Handle reading editing logic here
-    console.log('Reading ID:', readingId);
-    console.log('Reading Value:', readingValue);
+    console.log("Reading ID:", readingId);
+    console.log("Reading Value:", readingValue);
   };
 
   return (
@@ -54,4 +54,4 @@ const EditReadingsPage = () => {
   );
 };
 
-export default EditReadingsPage;
+export default ManageReadingsPage;

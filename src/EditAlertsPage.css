@@ -1,0 +1,54 @@
+.edit-alerts-page {
+  padding: 20px;
+}
+
+.alerts-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.alert-tile {
+  border: 1px solid #292020;
+  padding: 15px;
+  border-radius: 8px;
+  background-color: #221919;
+  width: 250px;
+}
+
+.button-container {
+  margin-top: 10px;
+}
+
+.small-button {
+  padding: 5px 10px;
+  border-radius: 20px;
+  border: none;
+  cursor: pointer;
+  margin-right: 10px;
+}
+
+.small-button.acknowledged {
+  background-color: #4caf50;
+  color: rgb(0, 0, 0);
+}
+
+.small-button.disabled {
+  background-color: #f44336;
+  color: rgb(0, 0, 0);
+}
+
+.add-alert-button {
+  padding: 10px 15px;
+  border-radius: 20px;
+  background-color: #2196f3;
+  color: rgb(39, 30, 30);
+  border: none;
+  cursor: pointer;
+  margin-bottom: 20px;
+}
+
+.add-alert-button:hover,
+.small-button:hover {
+  opacity: 0.8;
+}

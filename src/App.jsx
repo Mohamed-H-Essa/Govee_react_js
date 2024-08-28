@@ -3,13 +3,15 @@ import "./App.css";
 import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
 import LoginPage from "./LoginPage";
 import Header from "./Header";
-import EditReadingsPage from "./EditingReadingsPage";
+import ManageDevicesPage from "./EditDevicesPage";
+import ManageReadingsPage from "./EditReadingsPage";
+import ManageUsersPage from "./EditUsersPage";
+import EditAlertsPage from "./EditAlertsPage";
 import AdminPage from "./AdminPage";
-import EditingDevicePage from "./EditingDevicePage";
-import EditingUserPage from "./EditingUserPage";
 import MainPage from "./Main";
 import ProtectedRoute from "./ProtectedRoute";
 import DeviceDetailsPage from "./DeviceDetailPage";
+import UnauthorizedPage from "./UnauthorizedPage";
 
 const App = () => {
   return (
@@ -17,10 +19,51 @@ const App = () => {
       <div className="App">
         <Header />
         <Routes>
-          <Route exact path="/" element={<ProtectedRoute element={<MainPage />} />} />
-          <Route exact path="/manage_users" element={<ProtectedRoute  element={<EditingUserPage />} />} />
+          <Route
+            exact
+            path="/"
+            element={<ProtectedRoute element={<MainPage />} />}
+          />
           <Route exact path="/login" element={<LoginPage />} />
-          <Route path='devices/:id' element={<ProtectedRoute element={<DeviceDetailsPage />} />} />
+          <Route
+            path="devices/:id"
+            element={<ProtectedRoute element={<DeviceDetailsPage />} />}
+          />
+          <Route
+            path="admin"
+            element={<ProtectedRoute element={<AdminPage />} isAdmin={true} />}
+          />
+
+          <Route path="unauthorized" element={<UnauthorizedPage />} />
+
+          <Route
+            exact
+            path="/manage_devices"
+            element={
+              <ProtectedRoute element={<ManageDevicesPage />} isAdmin={true} />
+            }
+          />
+          <Route
+            exact
+            path="/manage_alerts"
+            element={
+              <ProtectedRoute element={<EditAlertsPage />} isAdmin={true} />
+            }
+          />
+          <Route
+            exact
+            path="/manage_users"
+            element={
+              <ProtectedRoute element={<ManageUsersPage />} isAdmin={true} />
+            }
+          />
+          <Route
+            exact
+            path="/manage_readings"
+            element={
+              <ProtectedRoute element={<ManageReadingsPage />} isAdmin={true} />
+            }
+          />
         </Routes>
       </div>
     </BrowserRouter>

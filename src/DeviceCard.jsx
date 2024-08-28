@@ -1,17 +1,17 @@
-import React from 'react';
-import { Card, CardContent, Typography, IconButton } from '@mui/material';
-import EditIcon from '@mui/icons-material/Edit';
-import { styled } from '@mui/material/styles';
+import React from "react";
+import { Card, CardContent, Typography, IconButton } from "@mui/material";
+import EditIcon from "@mui/icons-material/Edit";
+import { styled } from "@mui/material/styles";
 
 const LightBlueCard = styled(Card)({
-  backgroundColor: '#e0f7fa', // light blue background
+  backgroundColor: "#e0f7fa", // light blue background
 });
 
 const DeviceCard = ({ device, onEdit }) => {
   return (
     <LightBlueCard>
       <CardContent>
-        <Typography variant="h6" component="div">
+        <Typography color="textPrimary" variant="h6" component="div">
           {device.deviceModel}
         </Typography>
         <Typography color="textSecondary">
@@ -36,13 +36,13 @@ const DeviceCard = ({ device, onEdit }) => {
           Storage Mode: {device.storageMode}
         </Typography>
         <Typography color="textSecondary">
-          Button Stop: {device.buttonStop ? 'Yes' : 'No'}
+          Button Stop: {device.buttonStop ? "Yes" : "No"}
         </Typography>
         <Typography color="textSecondary">
-          Mute Button: {device.muteButton ? 'Yes' : 'No'}
+          Mute Button: {device.muteButton ? "Yes" : "No"}
         </Typography>
         <Typography color="textSecondary">
-          Alarm Tone: {device.alarmTone ? 'Yes' : 'No'}
+          Alarm Tone: {device.alarmTone ? "Yes" : "No"}
         </Typography>
         <Typography color="textSecondary">
           Max Temperature: {device.maxTemperature}°C

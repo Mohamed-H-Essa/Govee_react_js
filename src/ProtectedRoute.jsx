@@ -1,10 +1,36 @@
-import React from 'react';
-import { Navigate } from 'react-router-dom';
+import { jwtDecode } from "jwt-decode";
+import { Navigate } from "react-router-dom";
 
-const ProtectedRoute = ({ element: Component }) => {
-  const token = localStorage.getItem('token'); // or use any other method to get the token
+import { useNavigate } from "react-router-dom";
 
-  return token ? Component : <Navigate to="/login" />;
+const ProtectedRoute = ({ element: Component, isAdmin = false }) => {
+  const token = localStorage.getItem("token");
+  console.log("hello from protected route");
+
+  if (!isAdmin) {
+    return Component;
+  }
+  if (token) {
+    try {
+      const decodedToken = jwtDecode(token);
+      const roles = decodedToken.roles || [];
+
+      console.log("Roles: ");
+      console.log(roles);
+
+      if (roles.includes("admin")) {
+        return Component;
+      }
+
+      return <Navigate to="/unauthorized" />;
+    } catch (error) {
+      console.error("Invalid token:", error);
+
+      return <Navigate to="/unauthorized" />;
+    }
+  }
+
+  return <Navigate to="/login" />;
 };
 
 export default ProtectedRoute;
