@@ -18,7 +18,7 @@ const ProtectedRoute = ({ element: Component, isAdmin = false }) => {
       console.log("Roles: ");
       console.log(roles);
 
-      if (roles.includes("admin")) {
+      if (roles.includes("admin") || roles.includes("super_admin")) {
         return Component;
       }
 

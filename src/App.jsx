@@ -7,11 +7,13 @@ import ManageDevicesPage from "./EditDevicesPage";
 import ManageReadingsPage from "./EditReadingsPage";
 import ManageUsersPage from "./EditUsersPage";
 import EditAlertsPage from "./EditAlertsPage";
+import AlertsPage from "./AlertsPage";
 import AdminPage from "./AdminPage";
 import MainPage from "./Main";
 import ProtectedRoute from "./ProtectedRoute";
 import DeviceDetailsPage from "./DeviceDetailPage";
 import UnauthorizedPage from "./UnauthorizedPage";
+import "bootstrap/dist/css/bootstrap.min.css";
 
 const App = () => {
   return (
@@ -43,6 +45,7 @@ const App = () => {
               <ProtectedRoute element={<ManageDevicesPage />} isAdmin={true} />
             }
           />
+          <Route exact path="/alerts" element={<AlertsPage />} />
           <Route
             exact
             path="/manage_alerts"

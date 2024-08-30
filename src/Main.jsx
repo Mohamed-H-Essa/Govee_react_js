@@ -5,7 +5,7 @@ import Select from "react-select";
 import { useEffect } from "react";
 import { API_URL } from "./constants";
 import { Typography } from "@mui/material";
-import Loading from "./Loading";
+import { Loading } from "./Loading";
 import { useNavigate } from "react-router-dom";
 
 const MainPage = () => {
@@ -285,8 +285,10 @@ const MainPage = () => {
               Export Readings XLSX
             </button>
             <button
-            // onClick={handleShowReadings}
-            // disabled={!selectedDevice || !startDate || !endDate}
+              onClick={() => {
+                navigate("/alerts");
+              }}
+              // disabled={!selectedDevice || !startDate || !endDate}
             >
               Open Alerts
             </button>
