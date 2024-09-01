@@ -1,6 +1,6 @@
 import React from "react";
 import "./App.css";
-import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import LoginPage from "./LoginPage";
 import Header from "./Header";
 import ManageDevicesPage from "./EditDevicesPage";
