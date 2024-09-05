@@ -108,8 +108,8 @@ const DeviceTable = () => {
   };
 
   const handleInject = () => {
-    const injectionIds = selectedDevices;
-    navigate("/injection", { state: { injectionIds } });
+    const devicesInjectedIds = selectedDevices;
+    navigate("/injection", { state: { injectionIds: devicesInjectedIds } });
   };
 
   const handleExportReport = async () => {

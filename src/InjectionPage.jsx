@@ -19,7 +19,7 @@ const InjectionPage = () => {
   const location = useLocation();
 
   console.log(location.state);
-  const injectionIds = location.state?.injectionIds || [];
+  const devicesInjectedIds = location.state?.devicesInjectedIds || [];
   const [injections, setInjections] = useState([]);
   const [fromTime, setFromTime] = useState(new Date());
   const [toTime, setToTime] = useState(new Date());
@@ -50,7 +50,7 @@ const InjectionPage = () => {
     setInjections([...injections, newInjection]);
   };
 
-  console.log(injectionIds);
+  console.log(devicesInjectedIds);
 
   return (
     <Container className="mt-4">
