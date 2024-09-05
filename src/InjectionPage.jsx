@@ -93,7 +93,7 @@ const InjectionPage = () => {
                 Type
               </Form.Label>
               <Col sm={10}>
-                <InputGroup>
+                <InputGroup style={{ zIndex: 0 }}>
                   <DropdownButton
                     variant="outline-secondary"
                     title={type}
