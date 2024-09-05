@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Container,
   Row,
@@ -10,16 +10,16 @@ import {
   DropdownButton,
   Dropdown,
   Badge,
+  Spinner,
 } from "react-bootstrap";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { useLocation } from "react-router-dom";
+import { API_URL } from "./constants";
 
 const InjectionPage = () => {
   const location = useLocation();
-
-  console.log(location.state);
-  const devicesInjectedIds = location.state?.devicesInjectedIds || [];
+  const injectedDevicesIds = location.state?.devicesInjectedIds || [];
   const [injections, setInjections] = useState([]);
   const [fromTime, setFromTime] = useState(new Date());
   const [toTime, setToTime] = useState(new Date());
@@ -27,14 +27,46 @@ const InjectionPage = () => {
   const [rangeFrom, setRangeFrom] = useState("");
   const [rangeTo, setRangeTo] = useState("");
   const [active, setActive] = useState(false);
+  const [loading, setLoading] = useState(false);
 
-  // Check if the "Add Injection" button should be enabled
   const isFormValid =
     fromTime &&
     toTime &&
     rangeFrom !== "" &&
     rangeTo !== "" &&
     rangeFrom < rangeTo;
+
+  // Fetch injections from the server based on injectionIds
+  useEffect(() => {
+    const fetchInjections = async () => {
+      if (injectedDevicesIds.length === 0) return; // Skip if no injection IDs
+      setLoading(true);
+      try {
+        const token = localStorage.getItem("token");
+        const response = await fetch(`${API_URL}/injections`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        const data = await response.json();
+        if (!response.ok) {
+          throw new Error(data.message || "Failed to fetch injections");
+        }
+
+        console.log("Fetched injections:", data);
+        setInjections(data); // Assuming the data is an array of injections
+      } catch (error) {
+        console.error("Error fetching injections:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchInjections();
+  }, []);
 
   const handleAddInjection = () => {
     const newInjection = {
@@ -49,8 +81,6 @@ const InjectionPage = () => {
     console.log(newInjection);
     setInjections([...injections, newInjection]);
   };
-
-  console.log(devicesInjectedIds);
 
   return (
     <Container className="mt-4">
@@ -146,38 +176,42 @@ const InjectionPage = () => {
       <Row>
         <Col>
           <h3>View Injections</h3>
-          <Table striped bordered hover>
-            <thead>
-              <tr>
-                <th>ID</th>
-                <th>From Time</th>
-                <th>To Time</th>
-                <th>Type</th>
-                <th>Range From</th>
-                <th>Range To</th>
-                <th>Active</th>
-              </tr>
-            </thead>
-            <tbody>
-              {injections.map((injection) => (
-                <tr key={injection.id}>
-                  <td>{injection.id}</td>
-                  <td>{injection.fromTime.toLocaleString()}</td>
-                  <td>{injection.toTime.toLocaleString()}</td>
-                  <td>{injection.type}</td>
-                  <td>{injection.rangeFrom}</td>
-                  <td>{injection.rangeTo}</td>
-                  <td>
-                    {injection.active ? (
-                      <Badge bg="success">Active</Badge>
-                    ) : (
-                      <Badge bg="secondary">Inactive</Badge>
-                    )}
-                  </td>
+          {loading ? (
+            <Spinner animation="border" />
+          ) : (
+            <Table striped bordered hover>
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>From Time</th>
+                  <th>To Time</th>
+                  <th>Type</th>
+                  <th>Range From</th>
+                  <th>Range To</th>
+                  <th>Active</th>
                 </tr>
-              ))}
-            </tbody>
-          </Table>
+              </thead>
+              <tbody>
+                {injections.map((injection) => (
+                  <tr key={injection.id}>
+                    <td>{injection.id}</td>
+                    <td>{new Date(injection.fromTime).toLocaleString()}</td>
+                    <td>{new Date(injection.toTime).toLocaleString()}</td>
+                    <td>{injection.type}</td>
+                    <td>{injection.rangeFrom}</td>
+                    <td>{injection.rangeTo}</td>
+                    <td>
+                      {injection.active ? (
+                        <Badge bg="success">Active</Badge>
+                      ) : (
+                        <Badge bg="secondary">Inactive</Badge>
+                      )}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </Table>
+          )}
         </Col>
       </Row>
     </Container>
