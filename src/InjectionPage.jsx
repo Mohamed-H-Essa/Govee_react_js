@@ -20,7 +20,7 @@ import { API_URL } from "./constants";
 const InjectionPage = () => {
   const location = useLocation();
   const injectedDevicesIds = location.state?.devicesInjectedIds || [];
-  const [injections, setInjections] = useState([]);
+  const [data, setData] = useState([]);
   const [fromTime, setFromTime] = useState(new Date());
   const [toTime, setToTime] = useState(new Date());
   const [type, setType] = useState("Temperature");
@@ -34,65 +34,98 @@ const InjectionPage = () => {
     rangeFrom !== "" &&
     rangeTo !== "" &&
     rangeFrom < rangeTo;
+  const [selectedRows, setSelectedRows] = useState([]);
+
+  const handleSelect = (id) => {
+    setSelectedRows((prevSelectedRows) =>
+      prevSelectedRows.includes(id)
+        ? prevSelectedRows.filter((rowId) => rowId !== id)
+        : [...prevSelectedRows, id]
+    );
+  };
+
+  const fetchInjections = async () => {
+    setLoading(true);
+    try {
+      const token = localStorage.getItem("token");
+      const response = await fetch(`${API_URL}/injections`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      const data = await response.json();
+      if (!response.ok) {
+        throw new Error(data.message || "Failed to fetch injections");
+      }
+
+      console.log("Fetched injections:", data);
+      setData(data);
+    } catch (error) {
+      console.error("Error fetching injections:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    const fetchInjections = async () => {
-      setLoading(true);
-      try {
-        const token = localStorage.getItem("token");
-        const response = await fetch(`${API_URL}/injections`, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        });
-
-        const data = await response.json();
-        if (!response.ok) {
-          throw new Error(data.message || "Failed to fetch injections");
-        }
-
-        console.log("Fetched injections:", data);
-        setInjections(data); // Assuming the data is an array of injections
-      } catch (error) {
-        console.error("Error fetching injections:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
     fetchInjections();
   }, []);
 
-  const handleAddInjection = () => {
-    const newInjection = {
-      deviceIds: injectedDevicesIds,
-    };
+  const handleAddInjection = async () => {
+    setLoading(true);
+    try {
+      const token = localStorage.getItem("token");
 
-    if (fromTime) {
-      const date = new Date(fromTime);
-      const localDate = new Date(
-        date.getTime() + date.getTimezoneOffset() * 60000
-      );
-      newInjection.timeStart = localDate;
-    }
-    if (toTime) {
-      const date = new Date(toTime);
-      const localDate = new Date(
-        date.getTime() + date.getTimezoneOffset() * 60000
-      );
-      newInjection.timeEnd = localDate;
-    }
+      const newInjection = {
+        deviceIds: injectedDevicesIds,
+      };
 
-    if (type === "Temperature") {
-      newInjection.tempMin = Number(rangeFrom);
-      newInjection.tempMax = Number(rangeTo);
-    } else if (type === "Humidity") {
-      newInjection.humidityMin = Number(rangeFrom);
-      newInjection.humidityMax = Number(rangeTo);
+      if (fromTime) {
+        const date = new Date(fromTime);
+        const localDate = new Date(
+          date.getTime() + date.getTimezoneOffset() * 60000
+        );
+        newInjection.timeStart = localDate;
+      }
+      if (toTime) {
+        const date = new Date(toTime);
+        const localDate = new Date(
+          date.getTime() + date.getTimezoneOffset() * 60000
+        );
+        newInjection.timeEnd = localDate;
+      }
+
+      if (type === "Temperature") {
+        newInjection.tempMin = Number(rangeFrom);
+        newInjection.tempMax = Number(rangeTo);
+      } else if (type === "Humidity") {
+        newInjection.humidityMin = Number(rangeFrom);
+        newInjection.humidityMax = Number(rangeTo);
+      }
+
+      const response = await fetch(`${API_URL}/injections`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(newInjection),
+      });
+
+      const data = await response.json();
+      if (!response.ok) {
+        throw new Error(data.message || "Failed to fetch injections");
+      }
+
+      fetchInjections();
+      console.log(JSON.stringify(newInjection));
+    } catch (e) {
+    } finally {
+      setLoading(false);
     }
-    console.log(JSON.stringify(newInjection));
   };
 
   return (
@@ -195,30 +228,54 @@ const InjectionPage = () => {
             <Table striped bordered hover>
               <thead>
                 <tr>
+                  <th>Select</th>
                   <th>ID</th>
-                  <th>From Time</th>
-                  <th>To Time</th>
-                  <th>Type</th>
-                  <th>Range From</th>
-                  <th>Range To</th>
+                  <th>Humidity Min</th>
+                  <th>Humidity Max</th>
+                  <th>Temp Min</th>
+                  <th>Temp Max</th>
+                  <th>Time Start</th>
+                  <th>Time End</th>
                   <th>Active</th>
+                  <th>Created By</th>
+                  <th>Updated By</th>
+                  <th>Deleted By</th>
+                  <th>Deleted At</th>
+                  <th>Created At</th>
+                  <th>Updated At</th>
                 </tr>
               </thead>
               <tbody>
-                {injections.map((injection) => (
-                  <tr key={injection.id}>
-                    <td>{injection.id}</td>
-                    <td>{new Date(injection.fromTime).toLocaleString()}</td>
-                    <td>{new Date(injection.toTime).toLocaleString()}</td>
-                    <td>{injection.type}</td>
-                    <td>{injection.rangeFrom}</td>
-                    <td>{injection.rangeTo}</td>
+                {data.map((item) => (
+                  <tr key={item.id}>
                     <td>
-                      {injection.active ? (
-                        <Badge bg="success">Active</Badge>
-                      ) : (
-                        <Badge bg="secondary">Inactive</Badge>
-                      )}
+                      <Form.Check
+                        type="checkbox"
+                        checked={selectedRows.includes(item.id)}
+                        onChange={() => handleSelect(item.id)}
+                      />
+                    </td>
+                    <td>{item.id}</td>
+                    <td>{item.humidityMin}</td>
+                    <td>{item.humidityMax}</td>
+                    <td>{item.tempMin}</td>
+                    <td>{item.tempMax}</td>
+                    <td>{new Date(item.timeStart).toLocaleString()}</td>
+                    <td>{new Date(item.timeEnd).toLocaleString()}</td>
+                    <td>{item.active ? "Yes" : "No"}</td>
+                    <td>{item.createdById}</td>
+                    <td>{item.updatedById}</td>
+                    <td>{item.deletedById}</td>
+                    <td>
+                      {item.deletedAt
+                        ? new Date(item.deletedAt).toLocaleString()
+                        : "-"}
+                    </td>
+                    <td>{new Date(item.createdAt).toLocaleString()}</td>
+                    <td>
+                      {item.updatedAt
+                        ? new Date(item.updatedAt).toLocaleString()
+                        : "-"}
                     </td>
                   </tr>
                 ))}
