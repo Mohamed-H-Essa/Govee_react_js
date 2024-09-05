@@ -145,3 +145,8 @@ button:hover:enabled {
   /* color: white; */
   /* border: none; */
 }
+/*                           React                                   */
+.react-bootstrap-table {
+  height: 480px;
+  overflow-y: scroll;
+}

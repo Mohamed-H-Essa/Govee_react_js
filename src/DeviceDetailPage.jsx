@@ -1,11 +1,13 @@
 import React from "react";
 import PropTypes from "prop-types";
-import './App.css'; // Make sure to import your CSS file
+// import "./App.css";
 import { useParams } from "react-router-dom";
 
 const DeviceDetailsPage = () => {
-  const {id} =  useParams();
-  const device = JSON.parse(localStorage.getItem("devices")).find((device) => device.id === parseInt(id));
+  const { id } = useParams();
+  const device = JSON.parse(localStorage.getItem("devices")).find(
+    (device) => device.id === parseInt(id)
+  );
 
   return (
     <div className="device-details-container">
@@ -16,11 +18,15 @@ const DeviceDetailsPage = () => {
       </div>
       <div className="device-detail">
         <span className="device-detail-label">Serial Number:</span>
-        <span className="device-detail-value">{device.serialNumber ?? "N/A"}</span>
+        <span className="device-detail-value">
+          {device.serialNumber ?? "N/A"}
+        </span>
       </div>
       <div className="device-detail">
         <span className="device-detail-label">Start Date:</span>
-        <span className="device-detail-value">{new Date(device.startDate).toLocaleString()}</span>
+        <span className="device-detail-value">
+          {new Date(device.startDate).toLocaleString()}
+        </span>
       </div>
       <div className="device-detail">
         <span className="device-detail-label">Probe Type:</span>
@@ -28,7 +34,9 @@ const DeviceDetailsPage = () => {
       </div>
       <div className="device-detail">
         <span className="device-detail-label">Firmware Version:</span>
-        <span className="device-detail-value">{device.firmwareVersion ?? "N/A"}</span>
+        <span className="device-detail-value">
+          {device.firmwareVersion ?? "N/A"}
+        </span>
       </div>
       <div className="device-detail">
         <span className="device-detail-label">Logging Interval:</span>
@@ -36,7 +44,9 @@ const DeviceDetailsPage = () => {
       </div>
       <div className="device-detail">
         <span className="device-detail-label">Alarm Logging Interval:</span>
-        <span className="device-detail-value">{device.alarmLoggingInterval}</span>
+        <span className="device-detail-value">
+          {device.alarmLoggingInterval}
+        </span>
       </div>
       <div className="device-detail">
         <span className="device-detail-label">Storage Mode:</span>
@@ -44,15 +54,21 @@ const DeviceDetailsPage = () => {
       </div>
       <div className="device-detail">
         <span className="device-detail-label">Button Stop:</span>
-        <span className="device-detail-value">{device.buttonStop ? "Yes" : "No"}</span>
+        <span className="device-detail-value">
+          {device.buttonStop ? "Yes" : "No"}
+        </span>
       </div>
       <div className="device-detail">
         <span className="device-detail-label">Mute Button:</span>
-        <span className="device-detail-value">{device.muteButton ? "Yes" : "No"}</span>
+        <span className="device-detail-value">
+          {device.muteButton ? "Yes" : "No"}
+        </span>
       </div>
       <div className="device-detail">
         <span className="device-detail-label">Alarm Tone:</span>
-        <span className="device-detail-value">{device.alarmTone ? "Yes" : "No"}</span>
+        <span className="device-detail-value">
+          {device.alarmTone ? "Yes" : "No"}
+        </span>
       </div>
       <div className="device-detail">
         <span className="device-detail-label">Max Temperature:</span>
@@ -76,11 +92,17 @@ const DeviceDetailsPage = () => {
       </div>
       <div className="device-detail">
         <span className="device-detail-label">Created At:</span>
-        <span className="device-detail-value">{new Date(device.createdAt).toLocaleString()}</span>
+        <span className="device-detail-value">
+          {new Date(device.createdAt).toLocaleString()}
+        </span>
       </div>
       <div className="device-detail">
         <span className="device-detail-label">Updated At:</span>
-        <span className="device-detail-value">{device.updatedAt ? new Date(device.updatedAt).toLocaleString() : "N/A"}</span>
+        <span className="device-detail-value">
+          {device.updatedAt
+            ? new Date(device.updatedAt).toLocaleString()
+            : "N/A"}
+        </span>
       </div>
     </div>
   );

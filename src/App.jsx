@@ -1,5 +1,5 @@
 import React from "react";
-import "./App.css";
+// import "./App.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import LoginPage from "./LoginPage";
 import Header from "./Header";
@@ -13,7 +13,10 @@ import MainPage from "./Main";
 import ProtectedRoute from "./ProtectedRoute";
 import DeviceDetailsPage from "./DeviceDetailPage";
 import UnauthorizedPage from "./UnauthorizedPage";
+import DeviceTable from "./DeviceTable";
+import AddDevicePage from "./AddDevicePage";
 import "bootstrap/dist/css/bootstrap.min.css";
+import InjectionPage from "./InjectionPage";
 
 const App = () => {
   return (
@@ -67,6 +70,9 @@ const App = () => {
               <ProtectedRoute element={<ManageReadingsPage />} isAdmin={true} />
             }
           />
+          <Route path="/device_table" element={<DeviceTable />}></Route>
+          <Route path="/add_device" element={<AddDevicePage />}></Route>
+          <Route path="/injection" element={<InjectionPage />}></Route>
         </Routes>
       </div>
     </BrowserRouter>
