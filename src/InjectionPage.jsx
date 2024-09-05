@@ -26,7 +26,6 @@ const InjectionPage = () => {
   const [type, setType] = useState("Temperature");
   const [rangeFrom, setRangeFrom] = useState("");
   const [rangeTo, setRangeTo] = useState("");
-  const [active, setActive] = useState(false);
   const [loading, setLoading] = useState(false);
 
   const isFormValid =
@@ -36,10 +35,8 @@ const InjectionPage = () => {
     rangeTo !== "" &&
     rangeFrom < rangeTo;
 
-  // Fetch injections from the server based on injectionIds
   useEffect(() => {
     const fetchInjections = async () => {
-      if (injectedDevicesIds.length === 0) return; // Skip if no injection IDs
       setLoading(true);
       try {
         const token = localStorage.getItem("token");
@@ -70,16 +67,32 @@ const InjectionPage = () => {
 
   const handleAddInjection = () => {
     const newInjection = {
-      id: injections.length + 1,
-      fromTime,
-      toTime,
-      type,
-      rangeFrom,
-      rangeTo,
-      active: Math.random() < 0.5, // Randomly set the active status for demonstration purposes
+      deviceIds: injectedDevicesIds,
     };
-    console.log(newInjection);
-    setInjections([...injections, newInjection]);
+
+    if (fromTime) {
+      const date = new Date(fromTime);
+      const localDate = new Date(
+        date.getTime() + date.getTimezoneOffset() * 60000
+      );
+      newInjection.timeStart = localDate;
+    }
+    if (toTime) {
+      const date = new Date(toTime);
+      const localDate = new Date(
+        date.getTime() + date.getTimezoneOffset() * 60000
+      );
+      newInjection.timeEnd = localDate;
+    }
+
+    if (type === "Temperature") {
+      newInjection.tempMin = Number(rangeFrom);
+      newInjection.tempMax = Number(rangeTo);
+    } else if (type === "Humidity") {
+      newInjection.humidityMin = Number(rangeFrom);
+      newInjection.humidityMax = Number(rangeTo);
+    }
+    console.log(JSON.stringify(newInjection));
   };
 
   return (
