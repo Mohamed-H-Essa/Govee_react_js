@@ -312,7 +312,8 @@ const DeviceTable = () => {
             <Col md={6}>
               <Form.Group className="mb-0">
                 <Form.Label>
-                  End Date <span className="text-danger">*</span>
+                  End Date <em>(Not Inclusive)</em>
+                  <span className="text-danger">*</span>
                 </Form.Label>
                 <Form.Control
                   type="date"
