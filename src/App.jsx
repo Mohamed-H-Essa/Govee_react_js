@@ -70,7 +70,7 @@ const App = () => {
               <ProtectedRoute element={<ManageReadingsPage />} isAdmin={true} />
             }
           />
-          <Route path="/device_table" element={<DeviceTable />}></Route>
+          <Route path="/home" element={<DeviceTable />}></Route>
           <Route path="/add_device" element={<AddDevicePage />}></Route>
           <Route path="/injection" element={<InjectionPage />}></Route>
         </Routes>
