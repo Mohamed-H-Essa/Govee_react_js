@@ -1,77 +1,93 @@
-import React from "react";
-import { Grid, Container, Typography } from "@mui/material";
+import React, { useState, useEffect } from "react";
+import { Container, Row, Col, Alert, Spinner } from "react-bootstrap";
 import UserCard from "./UserCard";
 import AddUserTile from "./AddUserTile";
-import { useState } from "react";
-import { useEffect } from "react";
 import { API_URL } from "./constants";
-
-// const users = [
-//   { id: 1, username: "john_doe", role: "user" },
-//   { id: 2, username: "jane_smith", role: "admin" },
-//   { id: 3, username: "alice_johnson", role: "user" },
-//   { id: 4, username: "bob_brown", role: "user" },
-//   { id: 5, username: "charlie_white", role: "user" },
-// ];
 
 const ManageUsersPage = () => {
   const [users, setUsers] = useState([]);
-  useEffect(() => {
-    fetch(API_URL + "/users", {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-      },
-    })
-      .then(async (response) => {
-        if (response.status === 401) {
-          console.log("Unauthorized access, Please Sign In and try again");
-          return;
-        }
-        if (response.status === 403) {
-          console.log("Forbidden access, Admin access only!");
-          return;
-        }
-        if (response.status === 200) {
-          console.log("Success");
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
+  useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        const response = await fetch(`${API_URL}/users`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        });
+
+        if (response.status === 401) {
+          setError("Unauthorized access. Please sign in and try again.");
+          setLoading(false);
+          return;
+        }
+
+        if (response.status === 403) {
+          setError("Forbidden access. Admin access only!");
+          setLoading(false);
+          return;
+        }
+
+        if (response.status === 200) {
           const data = await response.json();
           setUsers(data);
-
-          console.log(data);
+          setLoading(false);
           return;
         }
-      })
-      .catch((error) => {
-        console.error(`An Error has occured! Unkown error: !${error}`);
-        return;
-      });
+
+        // Handle other unexpected statuses
+        const errorData = await response.text();
+        setError(`Unexpected error: ${errorData}`);
+        setLoading(false);
+      } catch (err) {
+        setError(`An error has occurred: ${err.message}`);
+        setLoading(false);
+      }
+    };
+
+    fetchUsers();
   }, []);
 
   const handleEdit = (id) => {
     console.log(`Edit user with id: ${id}`);
+    // Implement your edit logic here
   };
 
   const handleAddUser = () => {
     console.log("Add new user");
+    // Implement your add user logic here
   };
 
   return (
-    <Container maxWidth="lg">
-      <Typography variant="h4" component="h1" gutterBottom>
-        Edit Users
-      </Typography>
-      <Grid container spacing={3}>
-        {users.map((user) => (
-          <Grid item xs={12} sm={6} md={4} lg={3} key={user.id}>
-            <UserCard user={user} onEdit={handleEdit} />
-          </Grid>
-        ))}
-        <Grid item xs={12} sm={6} md={4} lg={3}>
-          <AddUserTile onAdd={handleAddUser} />
-        </Grid>
-      </Grid>
+    <Container className="my-4">
+      <h1 className="mb-4">Manage Users</h1>
+
+      {loading && (
+        <div className="text-center my-5">
+          <Spinner animation="border" role="status">
+            <span className="visually-hidden">Loading...</span>
+          </Spinner>
+        </div>
+      )}
+
+      {error && <Alert variant="danger">{error}</Alert>}
+
+      {!loading && !error && (
+        <Row xs={1} sm={2} md={3} lg={4} className="g-4">
+          {users.map((user) => (
+            <Col key={user.id}>
+              <UserCard user={user} onEdit={handleEdit} />
+            </Col>
+          ))}
+          <Col>
+            <AddUserTile onAdd={handleAddUser} />
+          </Col>
+        </Row>
+      )}
     </Container>
   );
 };

@@ -1,25 +1,22 @@
-import React from 'react';
-import { Card, CardContent, Typography, IconButton } from '@mui/material';
-import AddIcon from '@mui/icons-material/Add';
-import { styled } from '@mui/material/styles';
-
-const LightBlueCard = styled(Card)({
-  backgroundColor: '#e0f7fa', // light blue background
-});
+import React from "react";
+import { Card, Button } from "react-bootstrap";
+import PropTypes from "prop-types";
 
 const AddUserTile = ({ onAdd }) => {
   return (
-    <LightBlueCard>
-      <CardContent>
-        <Typography variant="h6" component="div" align="center">
-          Add User
-        </Typography>
-        <IconButton onClick={onAdd} sx={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
-          <AddIcon fontSize="large" />
-        </IconButton>
-      </CardContent>
-    </LightBlueCard>
+    <Card className="h-100 text-center bg-light">
+      <Card.Body className="d-flex flex-column justify-content-center align-items-center">
+        <Card.Title>Add New User</Card.Title>
+        <Button variant="success" onClick={onAdd}>
+          <i className="bi bi-plus-lg"></i> Add User
+        </Button>
+      </Card.Body>
+    </Card>
   );
+};
+
+AddUserTile.propTypes = {
+  onAdd: PropTypes.func.isRequired,
 };
 
 export default AddUserTile;

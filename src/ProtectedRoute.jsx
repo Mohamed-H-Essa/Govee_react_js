@@ -6,8 +6,9 @@ import { useNavigate } from "react-router-dom";
 const ProtectedRoute = ({ element: Component, isAdmin = false }) => {
   const token = localStorage.getItem("token");
   console.log("hello from protected route");
+  console.log(token);
 
-  if (!isAdmin) {
+  if (isAdmin) {
     return Component;
   }
   if (token) {
@@ -18,11 +19,16 @@ const ProtectedRoute = ({ element: Component, isAdmin = false }) => {
       console.log("Roles: ");
       console.log(roles);
 
-      if (roles.includes("admin") || roles.includes("super_admin")) {
+      if (
+        isAdmin &&
+        (roles.includes("admin") || roles.includes("super_admin"))
+      ) {
+        return Component;
+      } else if (isAdmin) {
+        return <Navigate to="/unauthorized" />;
+      } else {
         return Component;
       }
-
-      return <Navigate to="/unauthorized" />;
     } catch (error) {
       console.error("Invalid token:", error);
 

@@ -27,7 +27,7 @@ const App = () => {
           <Route
             exact
             path="/"
-            element={<ProtectedRoute element={<MainPage />} />}
+            element={<ProtectedRoute element={<DeviceTable />} />}
           />
           <Route exact path="/login" element={<LoginPage />} />
           <Route

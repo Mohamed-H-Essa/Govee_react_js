@@ -1,26 +1,35 @@
+// UserCard.js
 import React from "react";
-import { Card, CardContent, Typography, IconButton } from "@mui/material";
-import EditIcon from "@mui/icons-material/Edit";
-import { styled } from "@mui/material/styles";
-
-const LightBlueCard = styled(Card)({
-  backgroundColor: "#e0f7fa", // light blue background
-});
+import { Card, Button } from "react-bootstrap";
+import PropTypes from "prop-types";
 
 const UserCard = ({ user, onEdit }) => {
+  const { id, username, role } = user;
+
   return (
-    <LightBlueCard>
-      <CardContent>
-        <Typography color="textPrimary" variant="h6" component="div">
-          {user.username}
-        </Typography>
-        <Typography color="textSecondary">Role: {user.role}</Typography>
-        <IconButton color="red" onClick={() => onEdit(user.id)}>
-          <EditIcon />
-        </IconButton>
-      </CardContent>
-    </LightBlueCard>
+    <Card className="h-100">
+      <Card.Body className="d-flex flex-column">
+        <Card.Title>{username}</Card.Title>
+        <Card.Subtitle className="mb-2 text-muted">
+          Role: {role.charAt(0).toUpperCase() + role.slice(1)}
+        </Card.Subtitle>
+        <div className="mt-auto">
+          <Button variant="primary" onClick={() => onEdit(id)}>
+            Edit
+          </Button>
+        </div>
+      </Card.Body>
+    </Card>
   );
+};
+
+UserCard.propTypes = {
+  user: PropTypes.shape({
+    id: PropTypes.number.isRequired,
+    username: PropTypes.string.isRequired,
+    role: PropTypes.string.isRequired,
+  }).isRequired,
+  onEdit: PropTypes.func.isRequired,
 };
 
 export default UserCard;

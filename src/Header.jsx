@@ -29,6 +29,15 @@ const Header = () => {
         <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
           Govee
         </Typography>
+
+        <Button
+          style={{ color: "blue" }}
+          onClick={() => {
+            navigate("/manage_users");
+          }}
+        >
+          Manage Users
+        </Button>
       </Toolbar>
     </GradientAppBar>
   );
