@@ -1,12 +1,7 @@
+// Header.js
 import React from "react";
-import { AppBar, Toolbar, Typography } from "@mui/material";
-import { styled } from "@mui/material/styles";
-import { Button } from "@mui/material";
+import { Navbar, Container, Nav, Button } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
-
-const GradientAppBar = styled(AppBar)({
-  background: "linear-gradient(45deg, #3a3a3a 30%, #1a1a1a 90%)",
-});
 
 const Header = () => {
   const navigate = useNavigate();
@@ -17,29 +12,44 @@ const Header = () => {
     navigate("/login");
   };
 
-  return (
-    <GradientAppBar position="static">
-      <Toolbar>
-        {/* <IconButton edge="start" color="inherit" aria-label="device">
-          <MedicalServicesIcon />
-        </IconButton> */}
-        <Button style={{ color: "red" }} onClick={handleSignOut}>
-          Sign Out
-        </Button>
-        <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-          Govee
-        </Typography>
+  const handleManageUsers = () => {
+    navigate("/manage_users");
+  };
 
-        <Button
-          style={{ color: "blue" }}
-          onClick={() => {
-            navigate("/manage_users");
-          }}
+  return (
+    <Navbar bg="dark" variant="dark" expand="lg">
+      <Container>
+        {/* Navbar Brand */}
+        <Navbar.Brand
+          onClick={() => navigate("/")}
+          style={{ cursor: "pointer" }}
         >
-          Manage Users
-        </Button>
-      </Toolbar>
-    </GradientAppBar>
+          Govee
+        </Navbar.Brand>
+
+        {/* Toggle for mobile view */}
+        <Navbar.Toggle aria-controls="basic-navbar-nav" />
+
+        {/* Navbar Links and Buttons */}
+        <Navbar.Collapse id="basic-navbar-nav">
+          <Nav className="ms-auto">
+            {/* Manage Users Button */}
+            <Button
+              variant="outline-primary"
+              className="me-2"
+              onClick={handleManageUsers}
+            >
+              Manage Users
+            </Button>
+
+            {/* Sign Out Button */}
+            <Button variant="outline-danger" onClick={handleSignOut}>
+              Sign Out
+            </Button>
+          </Nav>
+        </Navbar.Collapse>
+      </Container>
+    </Navbar>
   );
 };
 

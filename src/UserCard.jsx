@@ -13,11 +13,11 @@ const UserCard = ({ user, onEdit }) => {
         <Card.Subtitle className="mb-2 text-muted">
           Role: {role.charAt(0).toUpperCase() + role.slice(1)}
         </Card.Subtitle>
-        <div className="mt-auto">
+        {/* <div className="mt-auto">
           <Button variant="primary" onClick={() => onEdit(id)}>
             Edit
           </Button>
-        </div>
+        </div> */}
       </Card.Body>
     </Card>
   );

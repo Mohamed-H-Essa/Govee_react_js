@@ -3,14 +3,14 @@ import { Navigate } from "react-router-dom";
 
 import { useNavigate } from "react-router-dom";
 
-const ProtectedRoute = ({ element: Component, isAdmin = false }) => {
+const ProtectedRoute = ({
+  element: Component,
+  isAdmin: adminIsRequired = false,
+}) => {
   const token = localStorage.getItem("token");
   console.log("hello from protected route");
   console.log(token);
 
-  if (isAdmin) {
-    return Component;
-  }
   if (token) {
     try {
       const decodedToken = jwtDecode(token);
@@ -20,11 +20,11 @@ const ProtectedRoute = ({ element: Component, isAdmin = false }) => {
       console.log(roles);
 
       if (
-        isAdmin &&
+        adminIsRequired &&
         (roles.includes("admin") || roles.includes("super_admin"))
       ) {
         return Component;
-      } else if (isAdmin) {
+      } else if (adminIsRequired) {
         return <Navigate to="/unauthorized" />;
       } else {
         return Component;
@@ -35,7 +35,6 @@ const ProtectedRoute = ({ element: Component, isAdmin = false }) => {
       return <Navigate to="/unauthorized" />;
     }
   }
-
   return <Navigate to="/login" />;
 };
 
