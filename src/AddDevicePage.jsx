@@ -106,7 +106,8 @@ const AddDevicePage = () => {
     formData.maxHumidity &&
     formData.minHumidity &&
     formData.maxHumidity > formData.minHumidity &&
-    formData.maxTemperature > formData.minTemperature;
+    formData.maxTemperature > formData.minTemperature &&
+    formData.serialNumber;
 
   return (
     <Container className="mt-4">
@@ -130,7 +131,10 @@ const AddDevicePage = () => {
             </Form.Group>
 
             <Form.Group className="mb-3">
-              <Form.Label>Serial Number</Form.Label>
+              <Form.Label>
+                Serial Number <span className="text-danger">*</span>
+              </Form.Label>
+
               <Form.Control
                 type="text"
                 name="serialNumber"

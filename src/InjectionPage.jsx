@@ -86,14 +86,14 @@ const InjectionPage = () => {
       if (fromTime) {
         const date = new Date(fromTime);
         const localDate = new Date(
-          date.getTime() + date.getTimezoneOffset() * 60000
+          date.getTime() // - date.getTimezoneOffset() * 60000
         );
         newInjection.timeStart = localDate;
       }
       if (toTime) {
         const date = new Date(toTime);
         const localDate = new Date(
-          date.getTime() + date.getTimezoneOffset() * 60000
+          date.getTime() // + date.getTimezoneOffset() * 60000
         );
         newInjection.timeEnd = localDate;
       }
