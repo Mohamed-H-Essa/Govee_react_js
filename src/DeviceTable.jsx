@@ -13,6 +13,7 @@ import {
 } from "react-bootstrap";
 import { API_URL } from "./constants";
 import { Link, useNavigate } from "react-router-dom";
+import GraphModal from "./GraphModal";
 
 const DeviceTable = () => {
   const navigate = useNavigate();
@@ -25,7 +26,10 @@ const DeviceTable = () => {
   const [loadingExport, setLoadingExport] = useState(false);
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
+  const [showModal, setShowModal] = useState(false);
 
+  const handleImageShow = () => setShowModal(true);
+  const handleImageClose = () => setShowModal(false);
   const handleClose = () => setShow(false);
   const handleShow = () => {
     setSuccess("");
@@ -36,6 +40,21 @@ const DeviceTable = () => {
   const handleConfirm = () => {
     handleClose();
     deleteSelectedDevices();
+  };
+
+  const checkDatesValid = () => {
+    setError("");
+    if (!startDate || !endDate) {
+      return true;
+    }
+    const start = new Date(startDate);
+    const end = new Date(endDate);
+    if (start > end) {
+      setError("Start date shouldn't be after end date!");
+      return false;
+    }
+
+    return true;
   };
 
   const deleteSelectedDevices = async () => {
@@ -117,6 +136,28 @@ const DeviceTable = () => {
   const handleExportReport = async () => {
     setError("");
     setLoadingExport(true);
+    // show error if start date is earlier than any of start date of any of the selected devices
+    // todo: check later
+
+    // const selectedDevicesStartDate = devices
+    //   .filter((device) => selectedDevices.includes(device.id))
+    //   .map((device) => new Date(device.startDate));
+
+    // if (startDate) {
+    //   const date = new Date(startDate);
+    //   const localDate = new Date(
+    //     date.getTime() + date.getTimezoneOffset() * 60000
+    //   );
+    //   if (
+    //     selectedDevicesStartDate.some(
+    //       (deviceStartDate) => deviceStartDate > localDate
+    //     )
+    //   ) {
+    //     setError("Start Date is earlier than the start date of the device");
+    //     setLoadingExport(false);
+    //     return;
+    //   }
+    // }
     try {
       let queryString = "?";
       if (startDate) {
@@ -258,6 +299,15 @@ const DeviceTable = () => {
     }
   }
 
+  async function handleShowHumidityGraph() {
+    checkDatesValid();
+    if (selectedDevices.length !== 1) {
+      setError("Please select only one device to view the graph");
+      return;
+    }
+    handleImageShow();
+  }
+
   return (
     <div className="container mt-4">
       {error && <Alert variant="danger">{error}</Alert>}
@@ -340,6 +390,39 @@ const DeviceTable = () => {
               onClick={() => {
                 setError("");
                 setSuccess("");
+                handleShowHumidityGraph();
+              }}
+            >
+              Show humidity graph
+            </button>
+            <GraphModal
+              show={showModal}
+              handleClose={handleImageClose}
+              imageId={selectedDevices[0]}
+              query={{ startDate, endDate }}
+            />
+
+            <button
+              className={
+                "btn me-2 w-100 btn-outline-primary " +
+                (selectedDevices.length === 0 ? "disabled" : "")
+              }
+              onClick={() => {
+                setError("");
+                setSuccess("");
+                handleExportReport();
+              }}
+            >
+              show temp graph
+            </button>
+            <button
+              className={
+                "btn me-2 w-100 btn-outline-primary " +
+                (selectedDevices.length === 0 ? "disabled" : "")
+              }
+              onClick={() => {
+                setError("");
+                setSuccess("");
                 handleExportReport();
               }}
             >
@@ -411,23 +494,26 @@ const DeviceTable = () => {
                   <th>Start Date</th>
                   <th>Probe Type</th>
                   <th>Firmware Version</th>
-                  <th>Logging Interval</th>
-                  <th>Alarm Logging Interval</th>
-                  <th>Storage Mode</th>
+                  {/* <th>Logging Interval</th> */}
+                  {/* <th>Alarm Logging Interval</th> */}
+                  {/* <th>Storage Mode</th> */}
                   <th>Button Stop</th>
-                  <th>Mute Button</th>
+                  {/* <th>Mute Button</th> */}
+                  <th>Status</th>
                   <th>Alarm Tone</th>
                   <th>Max Temperature</th>
                   <th>Min Temperature</th>
                   <th>Max Humidity</th>
                   <th>Min Humidity</th>
+                  <th>Alert Max Temp</th>
+                  <th>Alert Min Temp</th>
                   <th>Location</th>
-                  <th>Created By</th>
+                  {/* <th>Created By</th>
                   <th>Updated By</th>
                   <th>Deleted By</th>
                   <th>Deleted At</th>
                   <th>Created At</th>
-                  <th>Updated At</th>
+                  <th>Updated At</th> */}
                 </tr>
               </thead>
               <tbody>
@@ -450,18 +536,21 @@ const DeviceTable = () => {
                     <td>{new Date(device.startDate).toLocaleDateString()}</td>
                     <td>{device.probeType || "N/A"}</td>
                     <td>{device.firmwareVersion || "N/A"}</td>
-                    <td>{device.loggingInterval || "N/A"}</td>
-                    <td>{device.alarmLoggingInterval || "N/A"}</td>
-                    <td>{device.storageMode || "N/A"}</td>
+                    {/* <td>{device.loggingInterval || "N/A"}</td> */}
+                    {/* <td>{device.alarmLoggingInterval || "N/A"}</td> */}
+                    {/* <td>{device.storageMode || "N/A"}</td> */}
                     <td>{device.buttonStop ? "Yes" : "No"}</td>
-                    <td>{device.muteButton ? "Yes" : "No"}</td>
+                    {/* <td>{device.muteButton ? "Yes" : "No"}</td> */}
+                    <td>{device.status ? "On" : "Off"}</td>
                     <td>{device.alarmTone ? "Yes" : "No"}</td>
                     <td>{device.maxTemperature}°C</td>
                     <td>{device.minTemperature}°C</td>
                     <td>{device.maxHumidity}%</td>
                     <td>{device.minHumidity}%</td>
+                    <td>{device.alertMaxTemp || "N/A"}</td>
+                    <td>{device.alertMinTemp || "N/A"}</td>
                     <td>{device.location || "N/A"}</td>
-                    <td>{device.createdById || "N/A"}</td>
+                    {/* <td>{device.createdById || "N/A"}</td>
                     <td>{device.updatedById || "N/A"}</td>
                     <td>{device.deletedById || "N/A"}</td>
                     <td>
@@ -478,7 +567,7 @@ const DeviceTable = () => {
                       {device.updatedAt
                         ? new Date(device.updatedAt).toLocaleDateString()
                         : "N/A"}
-                    </td>
+                    </td> */}
                   </tr>
                 ))}
               </tbody>

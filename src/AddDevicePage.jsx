@@ -19,6 +19,8 @@ const AddDevicePage = () => {
     minTemperature: "",
     maxHumidity: "",
     minHumidity: "",
+    alertMaxTemp: "",
+    alertMinTemp: "",
     location: "",
   });
 
@@ -46,11 +48,13 @@ const AddDevicePage = () => {
 
       const formattedData = {
         ...formData,
-        startDate: localDate, // Convert to Date object
-        maxTemperature: Number(formData.maxTemperature), // Convert to Number
-        minTemperature: Number(formData.minTemperature), // Convert to Number
-        maxHumidity: Number(formData.maxHumidity), // Convert to Number
-        minHumidity: Number(formData.minHumidity), // Convert to Number
+        startDate: localDate,
+        maxTemperature: Number(formData.maxTemperature),
+        minTemperature: Number(formData.minTemperature),
+        maxHumidity: Number(formData.maxHumidity),
+        minHumidity: Number(formData.minHumidity),
+        alertMaxTemp: Number(formData.alertMaxTemp),
+        alertMinTemp: Number(formData.alertMinTemp),
       };
       const token = localStorage.getItem("token");
       console.log(JSON.stringify(formattedData));
@@ -83,6 +87,8 @@ const AddDevicePage = () => {
           minTemperature: "",
           maxHumidity: "",
           minHumidity: "",
+          alertMaxTemp: "",
+          alertMinTemp: "",
           location: "",
         });
       }
@@ -107,7 +113,9 @@ const AddDevicePage = () => {
     formData.minHumidity &&
     formData.maxHumidity > formData.minHumidity &&
     formData.maxTemperature > formData.minTemperature &&
-    formData.serialNumber;
+    formData.serialNumber &&
+    formData.alertMaxTemp &&
+    formData.alertMinTemp;
 
   return (
     <Container className="mt-4">
@@ -209,9 +217,6 @@ const AddDevicePage = () => {
                 <option value="1h">1h</option>
               </Form.Control>
             </Form.Group>
-          </Col>
-
-          <Col md={6}>
             <Form.Group className="mb-3">
               <Form.Label>Storage Mode</Form.Label>
               <Form.Control
@@ -224,7 +229,9 @@ const AddDevicePage = () => {
                 <option value="Stop">Stop</option>
               </Form.Control>
             </Form.Group>
+          </Col>
 
+          <Col md={6}>
             <Form.Group className="mb-3">
               <Form.Check
                 type="checkbox"
@@ -302,6 +309,27 @@ const AddDevicePage = () => {
                 type="number"
                 name="minHumidity"
                 value={formData.minHumidity}
+                onChange={handleChange}
+                required
+              />
+            </Form.Group>
+            <Form.Group className="mb-3">
+              <Form.Label>Alert Max Temp</Form.Label>
+              <Form.Control
+                type="number"
+                name="alertMaxTemp"
+                value={formData.alertMaxTemp}
+                onChange={handleChange}
+                required
+              />
+            </Form.Group>
+
+            <Form.Group className="mb-3">
+              <Form.Label>Alert Min Temp</Form.Label>
+              <Form.Control
+                type="number"
+                name="alertMinTemp"
+                value={formData.alertMinTemp}
                 onChange={handleChange}
                 required
               />

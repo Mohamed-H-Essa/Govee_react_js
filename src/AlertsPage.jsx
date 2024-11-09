@@ -34,6 +34,7 @@ const AlertsPage = () => {
 
         const data = await response.json();
         setAlerts(data);
+        console.log(alerts);
       } else {
         console.log("Unauthorized or forbidden access");
       }
@@ -111,6 +112,9 @@ const AlertsPage = () => {
               <Card>
                 <Card.Body>
                   <Card.Title>Device ID: {alert.device_id}</Card.Title>
+                  <Card.Title>
+                    Device Serial Number: {alert.serialNumber}
+                  </Card.Title>
                   <Card.Subtitle className="mb-2 text-muted">
                     Reading ID: {alert.reading_id}
                   </Card.Subtitle>
